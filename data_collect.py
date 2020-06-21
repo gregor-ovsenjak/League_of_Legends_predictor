@@ -4,4 +4,4 @@ import numpy as np
 
 
 data = pd.read_csv('data/lol.csv')
-print(data)
+
