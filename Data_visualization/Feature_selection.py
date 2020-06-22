@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.feature_selection import SelectPercentile, chi2
 from itertools import cycle, islice
 
 
@@ -24,7 +26,7 @@ class FeatImp():
 
 
 
-    def visualize(self,target_name):
+    def tree_selection(self,target_name):
         # plots a horizontal bar graph of most important features, selected by Extra
         # TreesClassifier. You can choose your own classifier as long as it is tree based
         X,y = seperate_target_feature(self.data,target_name)
@@ -47,8 +49,20 @@ class FeatImp():
         #plot heat map
         g=sns.heatmap(self.data[top_corr_features].corr(),annot=True,cmap="RdYlGn")
         plt.show()
+    
+    def statistical_test(self,target_name):
+        #only for non-negative features
+        X,y = seperate_target_feature(self.data,target_name)
+        #apply SelectKBest class to extract top 10 best features
+        X_new = SelectPercentile(chi2, percentile=10).fit(X1, y)
+        dfscores = pd.DataFrame(X_new.scores_)
+        dfcolumns = pd.DataFrame(X.columns)
+        #concat two dataframes for better visualization 
+        featureScores = pd.concat([dfcolumns,dfscores],axis=1)
+        featureScores.columns = ['Specs','Score']  #naming the dataframe columns
+        print(featureScores)  #print 10 best features
 
 
 featimp = FeatImp(data = pd.read_csv('../data/lol.csv'))
-featimp.corr_matrix('blueWins')
+featimp.statistical_test('blueWins')
     
