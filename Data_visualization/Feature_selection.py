@@ -44,7 +44,6 @@ class FeatImp():
         #get correlations of each features in dataset
         correlation_matrix = self.data.corr()
         top_corr_features = correlation_matrix[target_name].nlargest(10).index.values
-        print(top_corr_features)
         plt.figure(figsize=(10,10))
         #plot heat map
         g=sns.heatmap(self.data[top_corr_features].corr(),annot=True,cmap="RdYlGn")
@@ -54,7 +53,7 @@ class FeatImp():
         #only for non-negative features
         X,y = seperate_target_feature(self.data,target_name)
         #apply SelectKBest class to extract top 10 best features
-        X_new = SelectPercentile(chi2, percentile=10).fit(X1, y)
+        X_new = SelectPercentile(chi2, percentile=10).fit(X, y)
         dfscores = pd.DataFrame(X_new.scores_)
         dfcolumns = pd.DataFrame(X.columns)
         #concat two dataframes for better visualization 
@@ -63,6 +62,5 @@ class FeatImp():
         print(featureScores)  #print 10 best features
 
 
-featimp = FeatImp(data = pd.read_csv('../data/lol.csv'))
-featimp.statistical_test('blueWins')
+
     
