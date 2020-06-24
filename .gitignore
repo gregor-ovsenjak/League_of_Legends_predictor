@@ -2,4 +2,4 @@ ENV
 .vscode
 .csv
 data/
-.pyc
+.ipynb_checkpoint/
