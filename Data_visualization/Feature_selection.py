@@ -82,5 +82,5 @@ def BlueRedSubstraction(data):
             red_col_name = 'red'+ regex_result[0]
             # new features are made by substracting Blue - Red  features 
             # with the same name
-            data2['BRdiff'+regex_result[0]] = data['blue'+regex_result[0]] - data[red_col_name]
+            data2[regex_result[0]+'Diff'] = data['blue'+regex_result[0]] - data[red_col_name]
     return data2
