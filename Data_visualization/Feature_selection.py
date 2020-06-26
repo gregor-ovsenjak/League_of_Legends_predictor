@@ -7,6 +7,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.feature_selection import SelectPercentile, chi2
 from itertools import cycle, islice
+import re
 
 
 
@@ -63,4 +64,23 @@ class FeatImp():
 
 
 
-    
+
+def BlueRedSubstraction(data):
+    '''This function takes a DataFrame object as an argument,
+       and returns a modified DataFrame object with totally new features
+    ''' 
+    data = data.drop('blueWins',axis =1)
+    # regular expression for deciding which features to substract from
+    regex_expresion = r'^blue(.*?[^Diff])$'
+    # second dataframe that this function will return 
+    data2 = pd.DataFrame()
+
+    for col_name in data.columns.values:
+
+        regex_result = re.findall(regex_expresion,col_name)
+        if regex_result:
+            red_col_name = 'red'+ regex_result[0]
+            # new features are made by substracting Blue - Red  features 
+            # with the same name
+            data2['BRdiff'+regex_result[0]] = data['blue'+regex_result[0]] - data[red_col_name]
+    return data2
