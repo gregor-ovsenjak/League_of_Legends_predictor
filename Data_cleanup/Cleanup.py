@@ -2,8 +2,6 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import OneHotEncoder
 import numpy as np
 import pandas as pd
 
@@ -17,7 +15,6 @@ class DataFrameSelector(BaseEstimator,TransformerMixin):
         return self
 
     def transform(self,X,y = None):
-        #print(X[self.attribute_names].values)
         return X.values
 
 
@@ -56,32 +53,35 @@ class Normalisation(BaseEstimator,TransformerMixin):
                                     ])
 
     def transform(self,X,y = None,transform = False):
+        if self.Sc:
+            Sc_X = self.Std_scaler_pipeline.fit_transform(X)
+        if self.MM:
+            MM_X = self.Min_Max_pipeline.fit_transform(X)
+        # fit in transform podatke
         if not transform:
             if self.Sc and self.MM :
-                Sc_X = self.Std_scaler_pipeline.fit_transform(X)
-                MM_X = self.Min_Max_pipeline.fit_transform(X)
                 Sc_transformed,MM_transformed = Back_to_DataFrame(X,self.Sc,self.MM,Sc_X,MM_X)
                 return Sc_transformed,MM_transformed
-            elif self.Sc and not self.MM :
-                Sc_X = self.Std_scaler_pipeline.fit_transform(X)
+            elif self.Sc and not self.MM:
                 Sc_transformed= Back_to_DataFrame(X,self.Sc,self.MM,Sc_X)
                 return Sc_transformed
-            elif self.MM and not self.Sc :
-                MM_X = self.Min_Max_pipeline.fit_transform(X)
+            elif self.MM and not self.Sc:
                 MM_transformed = Back_to_DataFrame(X,self.Sc,self.MM,None,MM_X)
                 return MM_transformed
+        # samo transformiraj podatke--> uporabi za test set
         else:
             if self.Sc and self.MM :
-                Sc_X = self.Std_scaler_pipeline.transform(X)
-                MM_X = self.Min_Max_pipeline.transform(X)
                 Sc_transformed,MM_transformed = Back_to_DataFrame(X,self.Sc,self.MM,Sc_X,MM_X)
                 return Sc_transformed,MM_transformed
             elif self.Sc and not self.MM :
-                Sc_X = self.Std_scaler_pipeline.transform(X)
                 Sc_transformed= Back_to_DataFrame(X,self.Sc,self.MM,Sc_X)
                 return Sc_transformed
             elif self.MM and not self.Sc :
-                MM_X = self.Min_Max_pipeline.transform(X)
                 MM_transformed = Back_to_DataFrame(X,self.Sc,self.MM,None,MM_X)
                 return MM_transformed
 
+data = pd.read_csv('../data/lol.csv')
+n = Normalisation()
+a= n.transform(data)
+
+print(a)
