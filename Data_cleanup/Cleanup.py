@@ -4,6 +4,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 import pandas as pd
+import re
 
 
 
@@ -80,8 +81,24 @@ class Normalisation(BaseEstimator,TransformerMixin):
                 MM_transformed = Back_to_DataFrame(X,self.Sc,self.MM,None,MM_X)
                 return MM_transformed
 
-data = pd.read_csv('../data/lol.csv')
-n = Normalisation()
-a= n.transform(data)
 
-print(a)
+
+def BlueRedSubstraction(data):
+    '''This function takes a DataFrame object as an argument,
+       and returns a modified DataFrame object with totally new features
+    ''' 
+    data = data.drop('blueWins',axis =1)
+    # regular expression for deciding which features to substract from
+    regex_expresion = r'^blue(.*?[^Diff])$'
+    # second dataframe that this function will return 
+    data2 = pd.DataFrame()
+
+    for col_name in data.columns.values:
+
+        regex_result = re.findall(regex_expresion,col_name)
+        if regex_result:
+            red_col_name = 'red'+ regex_result[0]
+            # new features are made by substracting Blue - Red  features 
+            # with the same name
+            data2[regex_result[0]+'Diff'] = data['blue'+regex_result[0]] - data[red_col_name]
+    return data2
