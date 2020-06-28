@@ -54,33 +54,34 @@ class Normalisation(BaseEstimator,TransformerMixin):
                                     ])
 
     def transform(self,X,y = None,transform = False):
-        if self.Sc:
-            Sc_X = self.Std_scaler_pipeline.fit_transform(X)
-        if self.MM:
-            MM_X = self.Min_Max_pipeline.fit_transform(X)
-        # fit in transform podatke
         if not transform:
             if self.Sc and self.MM :
-                Sc_transformed,MM_transformed = Back_to_DataFrame(X,self.Sc,self.MM,Sc_X,MM_X)
-                return Sc_transformed,MM_transformed
-            elif self.Sc and not self.MM:
-                Sc_transformed= Back_to_DataFrame(X,self.Sc,self.MM,Sc_X)
-                return Sc_transformed
-            elif self.MM and not self.Sc:
-                MM_transformed = Back_to_DataFrame(X,self.Sc,self.MM,None,MM_X)
-                return MM_transformed
-        # samo transformiraj podatke--> uporabi za test set
-        else:
-            if self.Sc and self.MM :
+                Sc_X = self.Std_scaler_pipeline.fit_transform(X)
+                MM_X = self.Min_Max_pipeline.fit_transform(X)
                 Sc_transformed,MM_transformed = Back_to_DataFrame(X,self.Sc,self.MM,Sc_X,MM_X)
                 return Sc_transformed,MM_transformed
             elif self.Sc and not self.MM :
+                Sc_X = self.Std_scaler_pipeline.fit_transform(X)
                 Sc_transformed= Back_to_DataFrame(X,self.Sc,self.MM,Sc_X)
                 return Sc_transformed
             elif self.MM and not self.Sc :
+                MM_X = self.Min_Max_pipeline.fit_transform(X)
                 MM_transformed = Back_to_DataFrame(X,self.Sc,self.MM,None,MM_X)
                 return MM_transformed
-
+        else:
+            if self.Sc and self.MM :
+                Sc_X = self.Std_scaler_pipeline.transform(X)
+                MM_X = self.Min_Max_pipeline.transform(X)
+                Sc_transformed,MM_transformed = Back_to_DataFrame(X,self.Sc,self.MM,Sc_X,MM_X)
+                return Sc_transformed,MM_transformed
+            elif self.Sc and not self.MM :
+                Sc_X = self.Std_scaler_pipeline.transform(X)
+                Sc_transformed= Back_to_DataFrame(X,self.Sc,self.MM,Sc_X)
+                return Sc_transformed
+            elif self.MM and not self.Sc :
+                MM_X = self.Min_Max_pipeline.transform(X)
+                MM_transformed = Back_to_DataFrame(X,self.Sc,self.MM,None,MM_X)
+                return MM_transformed
 
 
 def BlueRedSubstraction(data):
