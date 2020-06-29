@@ -14,6 +14,9 @@ sns.set(style='white', context='notebook', palette='deep')
 
 
 def cross_val_results(X_train,Y_train):
+    '''Function for cross_validation of some choosen models. It returns a DataFrame of scores(mean,std) for each 
+       model and draws a histogram for better visualization.
+    '''
     kfold = KFold(n_splits=10)
     random_state = 2
     classifiers = []
