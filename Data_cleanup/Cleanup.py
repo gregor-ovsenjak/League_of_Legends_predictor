@@ -52,7 +52,7 @@ class Normalisation(BaseEstimator,TransformerMixin):
         self.Min_Max_pipeline = Pipeline([ ('dataFS_cat',DataFrameSelector()),
                                        ('Min_Max_scaler', self.MM_),     
                                     ])
-
+    #malo nezadovoljen s ponavlanjem kode, ter uporabo toliko if-stavkov
     def transform(self,X,y = None,transform = False):
         if not transform:
             if self.Sc and self.MM :
