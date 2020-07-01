@@ -79,14 +79,6 @@ def detect_outliers(df,n,features):
 corr_matrix = data.corr()
 df = pd.DataFrame(corr_matrix["blueWins"].sort_values(ascending=False))
 df = pd.DataFrame(df.loc[df["blueWins"]>0.4]).index.values
-#outliers = detect_outliers(data,5,data.columns.values)
-#data = data.drop(outliers, axis = 0).reset_index(drop=True)
-#plt.scatter(data["blueExperienceDiff"],data["blueTotalGold"])
-sct_matrix = scatter_matrix
-#sct_matrix(data[df],figsize=(12,8))
-plt.show()
-print(data["blueWins"].sum()/data.shape[0])
-plt.close()
 
 
 
@@ -114,13 +106,3 @@ def plot_decision_regions(X,y,classifier, test_idx = None,resolution = 0.002):
 
         plt.scatter(X_test[:,0],X_test[:,1],c = '',edgecolor= 'black',alpha = 1.0,linewidth= 1,marker = 'o',s=100,label = 'test set')
 
-
-
-'''
-index = ["blueExperienceDiff","blueGoldDiff"]
-target= data["blueWins"].values
-data1 = np.array(data[index].values)
-plt.scatter(data1[target == 1,1],data1[target==1,0],c = 'b',marker = '.')
-plt.scatter(data1[target == 0,1],data1[target==0,0],c = 'r',marker = '.')
-plt.show()
-'''
